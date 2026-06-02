@@ -28,7 +28,7 @@ npm run dev --prefix client   # Vite dev server, proxies /api → :3000
 podman run -d -p 3000:3000 \
   -v $(pwd)/data:/data \
   -v $(pwd)/config:/config:ro \
-  -v $(pwd)/copilot-config:/copilot-config \
+  -v $(pwd)/copilot-config:/root/.copilot \
   -e DATA_ROOT=/data \
   -e CONFIG_ROOT=/config \
   --name cxbox cxbox:latest
@@ -76,7 +76,7 @@ One-command script that builds the entire app into a production container:
 │  VOLUMES (external, mounted at runtime):    │
 │  /data           ← all customer data        │
 │  /config         ← optional schema/config   │
-│  /copilot-config ← copilot auth & config    │
+│  /root/.copilot  ← copilot auth & config    │
 └─────────────────────────────────────────────┘
 ```
 
@@ -86,7 +86,7 @@ One-command script that builds the entire app into a production container:
 |--------|---------|----------|
 | `/data` | All customer data: documents, extracted text, wiki pages, indexes, per-customer config | Yes |
 | `/config` | Override shared zone files (`schema.md`, `config.json`, etc.) | No |
-| `/copilot-config` | GitHub Copilot CLI auth tokens & config (persists login) | Yes (for AI features) |
+| `/root/.copilot` | GitHub Copilot CLI auth tokens & config (persists login) | Yes (for AI features) |
 
 ### Copilot CLI Login
 

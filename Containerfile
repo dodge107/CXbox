@@ -24,10 +24,9 @@ RUN chmod +x /entrypoint.sh
 # ── External volumes ──────────────────────────────────────────────────
 # /data           — All customer data (documents, wikis, indexes, configs)
 # /config         — Optional: override shared zone files (schema.md, config.json)
-# /copilot-config — GitHub Copilot CLI auth & config (persisted login)
-RUN mkdir -p /data /config /copilot-config && \
-    ln -sf /copilot-config /root/.copilot
-VOLUME ["/data", "/config", "/copilot-config"]
+# /root/.copilot  — GitHub Copilot CLI auth & config (persisted login)
+RUN mkdir -p /data /config /root/.copilot
+VOLUME ["/data", "/config", "/root/.copilot"]
 
 # ── Runtime ───────────────────────────────────────────────────────────
 EXPOSE 3000

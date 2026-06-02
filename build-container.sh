@@ -10,7 +10,7 @@
 # External volumes (mounted at runtime):
 #   /data           — All customer data, wiki pages, documents, config
 #   /config         — Optional: override config.json, schema.md, etc.
-#   /copilot-config — GitHub Copilot CLI auth & config (persisted login)
+#   /root/.copilot  — GitHub Copilot CLI auth & config (persisted login)
 #
 # Usage:
 #   ./build-container.sh                  # Build with default tag
@@ -182,7 +182,7 @@ echo "    $CONTAINER_ENGINE run -d \\"
 echo "      -p 3000:3000 \\"
 echo "      -v \$(pwd)/data:/data \\"
 echo "      -v \$(pwd)/config:/config:ro \\"
-echo "      -v \$(pwd)/copilot-config:/copilot-config \\"
+echo "      -v \$(pwd)/copilot-config:/root/.copilot \\"
 echo "      -e PORT=3000 \\"
 echo "      -e DATA_ROOT=/data \\"
 echo "      -e CONFIG_ROOT=/config \\"

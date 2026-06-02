@@ -20,7 +20,7 @@ services:
       # Optional: provide your own config files (read-only)
       - ./config:/config:ro
       # Copilot CLI auth & config — persists login across restarts
-      - ./copilot-config:/copilot-config
+      - ./copilot-config:/root/.copilot
     environment:
       - PORT=3000
       - DATA_ROOT=/data
