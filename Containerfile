@@ -2,7 +2,7 @@
 # CXbox — Customer Wiki Manager
 # Production container: app + Pandoc, data/config external
 # ──────────────────────────────────────────────────────────────────────
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Install Pandoc for universal document conversion
 # Install GitHub Copilot CLI for AI wiki processing

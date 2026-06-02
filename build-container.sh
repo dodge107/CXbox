@@ -73,8 +73,8 @@ check_cmd npm
 check_cmd "$CONTAINER_ENGINE"
 
 NODE_MAJOR=$(node -e "console.log(process.versions.node.split('.')[0])")
-if [[ "$NODE_MAJOR" -lt 22 ]]; then
-  err "Node.js 22+ required (found $(node -v))"
+if [[ "$NODE_MAJOR" -lt 24 ]]; then
+  err "Node.js 24+ required (found $(node -v))"
   exit 1
 fi
 
