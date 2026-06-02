@@ -49,15 +49,10 @@ export async function runAI(customerId, documentId) {
     // Invoke copilot CLI with tool approvals for headless operation
     const { stdout, stderr } = await exec('copilot', [
       '-p', prompt,
-      '--allow-tool=shell(read)',
-      '--allow-tool=shell(write)',
-      '--allow-tool=shell(ls)',
-      '--allow-tool=shell(cat)',
-      '--allow-tool=shell(mkdir)',
-      '--allow-tool=shell(cp)',
-      '--allow-tool=shell(mv)',
-      '--allow-tool=shell(rm)',
-      '--allow-tool=write',
+      '--allow-all-tools',
+      '--allow-all-paths',
+      '--allow-all-urls',
+      '--no-ask-user',
     ], {
       timeout: 5 * 60 * 1000, // 5 minute timeout
       maxBuffer: 50 * 1024 * 1024, // 50MB buffer
@@ -100,15 +95,10 @@ export async function queryAI(customerId, question) {
   try {
     const { stdout } = await exec('copilot', [
       '-p', prompt,
-      '--allow-tool=shell(read)',
-      '--allow-tool=shell(write)',
-      '--allow-tool=shell(ls)',
-      '--allow-tool=shell(cat)',
-      '--allow-tool=shell(mkdir)',
-      '--allow-tool=shell(cp)',
-      '--allow-tool=shell(mv)',
-      '--allow-tool=shell(rm)',
-      '--allow-tool=write',
+      '--allow-all-tools',
+      '--allow-all-paths',
+      '--allow-all-urls',
+      '--no-ask-user',
     ], {
       timeout: 3 * 60 * 1000,
       maxBuffer: 50 * 1024 * 1024,
@@ -143,15 +133,10 @@ export async function lintAI(customerId) {
   try {
     const { stdout } = await exec('copilot', [
       '-p', prompt,
-      '--allow-tool=shell(read)',
-      '--allow-tool=shell(write)',
-      '--allow-tool=shell(ls)',
-      '--allow-tool=shell(cat)',
-      '--allow-tool=shell(mkdir)',
-      '--allow-tool=shell(cp)',
-      '--allow-tool=shell(mv)',
-      '--allow-tool=shell(rm)',
-      '--allow-tool=write',
+      '--allow-all-tools',
+      '--allow-all-paths',
+      '--allow-all-urls',
+      '--no-ask-user',
     ], {
       timeout: 5 * 60 * 1000,
       maxBuffer: 50 * 1024 * 1024,

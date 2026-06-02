@@ -34,5 +34,7 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV DATA_ROOT=/data
 ENV CONFIG_ROOT=/config
+ENV COPILOT_HOME=/root/.copilot
+ENV HOME=/root
 
 ENTRYPOINT ["/entrypoint.sh"]
