@@ -8,8 +8,9 @@
 #   - Pandoc for document extraction
 #
 # External volumes (mounted at runtime):
-#   /data   — All customer data, wiki pages, documents, config
-#   /config — Optional: override config.json, schema.md, etc.
+#   /data           — All customer data, wiki pages, documents, config
+#   /config         — Optional: override config.json, schema.md, etc.
+#   /copilot-config — GitHub Copilot CLI auth & config (persisted login)
 #
 # Usage:
 #   ./build-container.sh                  # Build with default tag
@@ -181,11 +182,16 @@ echo "    $CONTAINER_ENGINE run -d \\"
 echo "      -p 3000:3000 \\"
 echo "      -v \$(pwd)/data:/data \\"
 echo "      -v \$(pwd)/config:/config:ro \\"
+echo "      -v \$(pwd)/copilot-config:/copilot-config \\"
 echo "      -e PORT=3000 \\"
 echo "      -e DATA_ROOT=/data \\"
 echo "      -e CONFIG_ROOT=/config \\"
 echo "      --name cxbox \\"
 echo "      $IMAGE_TAG"
+echo ""
+echo "  Copilot config directory (required for AI features):"
+echo "    Login once inside the container: $CONTAINER_ENGINE exec -it cxbox copilot"
+echo "    Auth tokens are persisted in ./copilot-config/"
 echo ""
 echo "  Config directory (optional):"
 echo "    Place schema.md, config.json, index.md, log.md in ./config/"

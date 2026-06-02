@@ -5,7 +5,9 @@
 FROM node:22-alpine
 
 # Install Pandoc for universal document conversion
-RUN apk add --no-cache pandoc
+# Install GitHub Copilot CLI for AI wiki processing
+RUN apk add --no-cache pandoc && \
+    npm install -g @github/copilot
 
 WORKDIR /app
 
@@ -20,10 +22,12 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # ── External volumes ──────────────────────────────────────────────────
-# /data   — All customer data (documents, wikis, indexes, configs)
-# /config — Optional: override shared zone files (schema.md, config.json)
-RUN mkdir -p /data /config
-VOLUME ["/data", "/config"]
+# /data           — All customer data (documents, wikis, indexes, configs)
+# /config         — Optional: override shared zone files (schema.md, config.json)
+# /copilot-config — GitHub Copilot CLI auth & config (persisted login)
+RUN mkdir -p /data /config /copilot-config && \
+    ln -sf /copilot-config /root/.copilot
+VOLUME ["/data", "/config", "/copilot-config"]
 
 # ── Runtime ───────────────────────────────────────────────────────────
 EXPOSE 3000

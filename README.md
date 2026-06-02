@@ -28,6 +28,7 @@ npm run dev --prefix client   # Vite dev server, proxies /api → :3000
 podman run -d -p 3000:3000 \
   -v $(pwd)/data:/data \
   -v $(pwd)/config:/config:ro \
+  -v $(pwd)/copilot-config:/copilot-config \
   -e DATA_ROOT=/data \
   -e CONFIG_ROOT=/config \
   --name cxbox cxbox:latest
@@ -70,10 +71,12 @@ One-command script that builds the entire app into a production container:
 │                                             │
 │  /entrypoint.sh    ← config overlay + start │
 │  pandoc            ← document conversion    │
+│  copilot           ← GitHub Copilot CLI     │
 │                                             │
 │  VOLUMES (external, mounted at runtime):    │
-│  /data   ← all customer data, wikis, docs   │
-│  /config ← optional schema/config overrides │
+│  /data           ← all customer data        │
+│  /config         ← optional schema/config   │
+│  /copilot-config ← copilot auth & config    │
 └─────────────────────────────────────────────┘
 ```
 
@@ -83,6 +86,34 @@ One-command script that builds the entire app into a production container:
 |--------|---------|----------|
 | `/data` | All customer data: documents, extracted text, wiki pages, indexes, per-customer config | Yes |
 | `/config` | Override shared zone files (`schema.md`, `config.json`, etc.) | No |
+| `/copilot-config` | GitHub Copilot CLI auth tokens & config (persists login) | Yes (for AI features) |
+
+### Copilot CLI Login
+
+The container includes the GitHub Copilot CLI for AI wiki processing. You need to authenticate once — the login persists in `./copilot-config/` across restarts and rebuilds.
+
+```bash
+# Login interactively inside the running container
+podman exec -it cxbox copilot
+
+# Then run the /login command inside the copilot prompt
+# Follow the browser auth flow, then exit
+```
+
+Alternatively, use a Personal Access Token:
+
+```bash
+podman exec -it cxbox sh -c 'GH_TOKEN=your_pat_here copilot -p "test"'
+```
+
+Or set it via environment variable in `docker-compose.yml`:
+
+```yaml
+environment:
+  - GH_TOKEN=ghp_your_token_here
+```
+
+> Requires an active GitHub Copilot subscription. See [Copilot plans](https://github.com/features/copilot/plans).
 
 ### Config Overlay
 
@@ -215,6 +246,7 @@ CXbox/
 ├── public/                    # Built frontend (output of vite build)
 ├── data/                      # All application state (files)
 ├── config/                    # External config overrides
+├── copilot-config/            # Copilot CLI auth tokens (gitignored)
 │
 ├── Containerfile              # Production container definition
 ├── entrypoint.sh              # Config overlay + app start
