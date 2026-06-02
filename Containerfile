@@ -1,25 +1,35 @@
+# ──────────────────────────────────────────────────────────────────────
+# CXbox — Customer Wiki Manager
+# Production container: app + Pandoc, data/config external
+# ──────────────────────────────────────────────────────────────────────
 FROM node:22-alpine
-
-WORKDIR /app
 
 # Install Pandoc for universal document conversion
 RUN apk add --no-cache pandoc
 
-# Install dependencies first (layer caching)
+WORKDIR /app
+
+# ── Dependencies ──────────────────────────────────────────────────────
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-# Copy application code
+# ── Application ───────────────────────────────────────────────────────
 COPY src/ ./src/
 COPY public/ ./public/
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Create data volume mount point
-RUN mkdir -p /data
-VOLUME /data
+# ── External volumes ──────────────────────────────────────────────────
+# /data   — All customer data (documents, wikis, indexes, configs)
+# /config — Optional: override shared zone files (schema.md, config.json)
+RUN mkdir -p /data /config
+VOLUME ["/data", "/config"]
 
+# ── Runtime ───────────────────────────────────────────────────────────
 EXPOSE 3000
 
 ENV NODE_ENV=production
 ENV DATA_ROOT=/data
+ENV CONFIG_ROOT=/config
 
-CMD ["node", "src/index.js"]
+ENTRYPOINT ["/entrypoint.sh"]

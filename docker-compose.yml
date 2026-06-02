@@ -1,0 +1,33 @@
+# ──────────────────────────────────────────────────────────────────────
+# CXbox — Compose for local development / production
+# Works with both Podman and Docker.
+#
+# Podman:  podman-compose up -d
+# Docker:  docker compose up -d
+# ──────────────────────────────────────────────────────────────────────
+services:
+  cxbox:
+    image: cxbox:latest
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: cxbox
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persistent data — survives container rebuilds
+      - ./data:/data
+      # Optional: provide your own config files (read-only)
+      - ./config:/config:ro
+    environment:
+      - PORT=3000
+      - DATA_ROOT=/data
+      - CONFIG_ROOT=/config
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
